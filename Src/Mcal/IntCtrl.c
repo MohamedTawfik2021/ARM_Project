@@ -13,9 +13,9 @@
  *  INCLUDES
  *********************************************************************************************************************/
 
-#include "Std_Types.h"
-#include "IntCtrl.h"
-#include "Mem_Map.h"
+#include"Std_Types.h"
+#include"IntCtrl.h"
+#include"Mem_Map.h"
 
 /**********************************************************************************************************************
 *  LOCAL MACROS CONSTANT\FUNCTION
@@ -64,25 +64,23 @@ IntCtrl_IntType intNum;
 void IntCtrl_Init(void)
 {
 	
-	uint8 priRegNum ,intGroup ,intSubGroup ,intGroupingField ,bitField;
-	uint8 enRegNum ,enBit;
+	uint8 intGroup ,intSubGroup ,intGroupingField ,bitField,enBit;
+	uint32 enRegNum ,priRegNum ;
 	volatile uint32 *priRegOffset ;
 	volatile uint32 *enRegOffset ;
 
 	/*___Set Grouping System - SCB_APINT Register___*/
-	     APINT =( (APINT_VECTKEY << 16)|(INT_GROUPING_SYSTEM << 8));
-	       
-	
- for(uint8 i=0; i< INT_REQUEST ;i++)
-	{
-		intNum = intArray[i].interruptNumber;
-		intGroup = intArray[i].groupPriority;
+	APINT =( (APINT_VECTKEY << 16)|(INT_GROUPING_SYSTEM << 8));
+    for(uint8 i=0; i< INT_REQUEST ;i++)
+	  {
+		intNum      = intArray[i].interruptNumber;
+		intGroup    = intArray[i].groupPriority;
 		intSubGroup = intArray[i].subgroupPriority;
 		
     /*___Group\Subgroup priority - PRIx Nvic Registers___*/
-        priRegNum = (intNum / 4);
+        priRegNum        = (intNum / 4);
 		intGroupingField = (intNum % 4);
-		priRegOffset = (0xE000E000+0x400)+ priRegNum;
+		priRegOffset     = (0xE000E000+0x400)+priRegNum;
 
 #if   (INT_GROUPING_SYSTEM == INT_GROUPING_SYSTEM_XXX)
 	     bitField = intGroup;
@@ -115,10 +113,10 @@ void IntCtrl_Init(void)
 		
 	
     /*___Enable Interrupt - NVIC_ENx Register___*/
-	   enRegNum = (intNum / 32);
-	   enBit = (intNum % 32);
-       enRegOffset = (0xE000E000+0x100)+ enRegNum;
-	   *enRegOffset |= (1 << enBit);
+	    enRegNum      = (intNum / 32);
+	    enBit         = (intNum % 32);
+        enRegOffset   = ((0xE000E000+0x100)+ enRegNum);
+	   *enRegOffset  |= (1 << enBit);
 
 	}	
 }
@@ -136,7 +134,7 @@ void IntCtrl_Init(void)
 * \Return value:   : None
 *******************************************************************************/
 
-void IntCtrl_Trigger(intNum)
+void IntCtrl_Trigger(IntCtrl_IntType intNum)
 {
   SWTRIG |= (intNum);
 }

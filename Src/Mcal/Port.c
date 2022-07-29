@@ -12,9 +12,9 @@
 /**********************************************************************************************************************
  *  INCLUDES
  *********************************************************************************************************************/
-#include "Std_Types.h"
-#include "Mem_Map.h"
-#include "Port.h"
+#include"Std_Types.h"
+#include"Mem_Map.h"
+#include"Port.h"
 
 /**********************************************************************************************************************
 *  LOCAL MACROS CONSTANT\FUNCTION
@@ -23,7 +23,7 @@
 /**********************************************************************************************************************
  *  LOCAL DATA 
  *********************************************************************************************************************/
-volatile uint32 PortBase;
+volatile static uint32 PortBase;
 
 /**********************************************************************************************************************
  *  GLOBAL DATA
@@ -32,7 +32,7 @@ volatile uint32 PortBase;
 /**********************************************************************************************************************
  *  LOCAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-void GetPortBase(Port_Type Port);
+void Port_GetPortBase(Port_Type Port);
 
 /**********************************************************************************************************************
  *  LOCAL FUNCTIONS
@@ -80,7 +80,7 @@ void GetPortBase(Port_Type Port)
 * \Return value:   : None  
 *                                                                      
 *******************************************************************************/
-void Port_Init ( const Port_ConfigType* ConfigPtr )
+void Port_Init ( const Port_ConfigType* PortConfigPtr )
 {
 	Port_PinType                Pin;
 	Port_Type                   Port;
@@ -93,13 +93,13 @@ void Port_Init ( const Port_ConfigType* ConfigPtr )
 	
 	for(uint8 i=0;i< ACTIVATE_CHANNELS;i++)
 	{
-		Pin               = ConfigPtr[i].pinId;
-		Port              = ConfigPtr[i].portId;
-		PinDir            = ConfigPtr[i].pinDir;
-		PinMode           = ConfigPtr[i].pinMode;
-		PortMux           = ConfigPtr[i].portMux;
-		CurrentStrength   = ConfigPtr[i].currentStrength;
-		InternalAttach    = ConfigPtr[i].internalAttach;
+		Pin               = PortConfigPtr[i].pinId;
+		Port              = PortConfigPtr[i].portId;
+		PinDir            = PortConfigPtr[i].pinDir;
+		PinMode           = PortConfigPtr[i].pinMode;
+		PortMux           = PortConfigPtr[i].portMux;
+		CurrentStrength   = PortConfigPtr[i].currentStrength;
+		InternalAttach    = PortConfigPtr[i].internalAttach;
 
 		GetPortBase(Port);
 		GPIOLOCK  = UNLOCK_KEY;

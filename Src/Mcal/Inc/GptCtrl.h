@@ -14,8 +14,7 @@
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
-#include "Std_Types.h"
-#include "GptCtrl_cfg.h"
+#include"Std_Types.h"
 
 
 /**********************************************************************************************************************
@@ -32,26 +31,14 @@
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
 
-
-typedef struct Gpt_Config
-{ 
-    Gpt_ChannelType channelId ;
-    Gpt_ValueType ticksFreq ;
-    Gpt_ValueType maxTicksValue ;
-    Gpt_ModeType channelMode;
-    uint32* CallFnPtr;
-
-} Gpt_ConfigType;
-
-
 typedef struct  Gpt_Predef_Timer
 {
-    const uint8 GPT_PREDEF_TIMER_1US_16BIT   :1;
-    const uint8 GPT_PREDEF_TIMER_1US_24BIT   :1;
-    const uint8 GPT_PREDEF_TIMER_1US_32BIT   :1;
-    const uint8 GPT_PREDEF_TIMER_100US_32BIT :1;
+     uint8 GPT_PREDEF_TIMER_1US_16BIT   :1;
+     uint8 GPT_PREDEF_TIMER_1US_24BIT   :1;
+     uint8 GPT_PREDEF_TIMER_1US_32BIT   :1;
+     uint8 GPT_PREDEF_TIMER_100US_32BIT :1;
 
-} Gpt_Predef_TimerType;
+}Gpt_Predef_TimerType;
 
 
 typedef enum Gpt_Channel
@@ -102,21 +89,30 @@ typedef enum Std_Return
 
 typedef uint32 Gpt_ValueType;
 
+typedef struct Gpt_Config
+{ 
+    Gpt_ChannelType channelId ;
+    Gpt_ValueType ticksFreq ;
+    Gpt_ValueType maxTicksValue ;
+    Gpt_ModeType channelMode;
+   // uint32* CallFnPtr;
+
+} Gpt_ConfigType;
 
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
  *********************************************************************************************************************/
-const uint32* ConfigPtr;
+
 
  
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
 
-Std_ReturnType Gpt_Init(const Gpt_ConfigType* Config_Ptr);
-void Gpt_StartTimer (Gpt_ChannelType channel ,Gpt_ValueType target_Time) ;
-void Gpt_StopTimer (Gpt_ChannelType channel ) ;
+Std_ReturnType Gpt_Init(const Gpt_ConfigType* ConfigPtr);
+void Gpt_StartTimer(Gpt_ChannelType channel ,Gpt_ValueType target_Time);
+void Gpt_StopTimer(Gpt_ChannelType channel );
 
 
 void Gpt_Notification_Timer0();
@@ -130,8 +126,8 @@ void Gpt_EnableNotification(Gpt_ChannelType channel);
 void Gpt_DisableNotification(Gpt_ChannelType channel);
 
 
-Gpt_ValueType Gpt_GetTimeElapsed (Gpt_ChannelType channel);
-Gpt_ValueType Gpt_GetTimeRemainig (Gpt_ChannelType channel);
+Gpt_ValueType Gpt_GetTimeElapsed(Gpt_ChannelType channel);
+Gpt_ValueType Gpt_GetTimeRemainig(Gpt_ChannelType channel);
 
 #endif  /* GPTCTRL_H */
 

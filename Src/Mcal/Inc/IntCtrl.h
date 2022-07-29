@@ -15,9 +15,9 @@
  * INCLUDES
  *********************************************************************************************************************/
 
-#include "Std_Types.h"
-#include "IntCtrl_Cfg.h"
-#include "Mem_Map.h"
+#include"Std_Types.h"
+#include"IntCtrl_Cfg.h"
+#include"Mem_Map.h"
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
@@ -180,10 +180,10 @@ extern const IntCtrl_CfgType intArray [];
  *********************************************************************************************************************/
  
 void IntCtrl_Init(void);
-void IntCtrl_Trigger(intNum);
+void IntCtrl_Trigger(IntCtrl_IntType intNum);
  
 
-#endif  INTCTRL_H 
+#endif /*INTCTRL_H*/
 
 /**********************************************************************************************************************
  *  END OF FILE: IntCtrl.h

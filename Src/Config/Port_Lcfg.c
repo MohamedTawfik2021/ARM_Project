@@ -1,5 +1,4 @@
-#include "Std_Types.h"
-#include "Port.h"
+#include"Port.h"
 
 
 const Port_ConfigType Port_Config[ACTIVATE_CHANNELS]=
@@ -9,3 +8,5 @@ const Port_ConfigType Port_Config[ACTIVATE_CHANNELS]=
 	{  PIN_5      ,PORT_B      ,OUT       ,SSI        ,0x5         ,PIN_2mA           ,PULLDOWN   }
 	
 };
+
+const Port_ConfigType *PortConfigPtr = Port_Config;
