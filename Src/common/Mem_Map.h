@@ -14,12 +14,24 @@
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
-#include "Std_Types.h"
+#include"Std_Types.h"
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
+/*________________SysTick Timer Registers_______________*/
 
+#define STCTRL                 (*(volatile uint32*)(0xE000E000+0x010) )
+#define STRELOAD               (*(volatile uint32*)(0xE000E000+0x014) )
+#define STCURRENT              (*(volatile uint32*)(0xE000E000+0x018) )
+
+/*________________System Control Clock Registers_______________*/
+
+#define RCC                    (*(volatile uint32*)(0x400FE000+0x060) )
+#define RCC2                   (*(volatile uint32*)(0x400FE000+0x070) )	
+#define RCGCTIMER              (*(volatile uint32*)(0x400FE000+0x604) )
+#define RCGCGPIO               (*(volatile uint32*)(0x400FE000+0x608) )	
+	
 /*______Nested Vectored Interrupt Controller (NVIC) Registers_______*/
 
 #define EN0                    (*(volatile uint32*)(0xE000E000+0x100) )

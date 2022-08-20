@@ -1,11 +1,12 @@
 /**********************************************************************************************************************
  *  FILE DESCRIPTION
  *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  DIO.c
- *        \brief  General Purpose DIGITAL in/out Driver
- *
- *      \details  The Driver Configure GPIO as a Digital function only
+/**        \file  SysTick.c
+ *        \brief  SysTick Timer Driver
+
+ *      \details  The Driver Configure The 24-bit SysTick 
                   
+ *             
  *
  *
  *********************************************************************************************************************/
@@ -13,26 +14,18 @@
 /**********************************************************************************************************************
  *  INCLUDES
  *********************************************************************************************************************/
-#include"Std_Types.h"
-#include"Mem_Map.h"
-#include"DIO.h"
+#include "Std_Types.h"
+#include "SysTick.h"
+#include "Mem_Map.h"
 
 /**********************************************************************************************************************
 *  LOCAL MACROS CONSTANT\FUNCTION
 *********************************************************************************************************************/
-#define MASK_ADDR_PIN0      0x004
-#define MASK_ADDR_PIN1      0x008
-#define MASK_ADDR_PIN2      0x010
-#define MASK_ADDR_PIN3      0x020
-#define MASK_ADDR_PIN4      0x040
-#define MASK_ADDR_PIN5      0x080
-#define MASK_ADDR_PIN6      0x100
-#define MASK_ADDR_PIN7      0x200
 
 /**********************************************************************************************************************
  *  LOCAL DATA 
  *********************************************************************************************************************/
-volatile static uint32 PortBase;
+
 /**********************************************************************************************************************
  *  GLOBAL DATA
  *********************************************************************************************************************/
@@ -40,170 +33,104 @@ volatile static uint32 PortBase;
 /**********************************************************************************************************************
  *  LOCAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-void Dio_GetPortBase(Dio_PortType port);
+
 
 /**********************************************************************************************************************
  *  LOCAL FUNCTIONS
  *********************************************************************************************************************/
+
 /******************************************************************************
-* \Syntax          : void Dio_GetPortBase(Dio_PortType port)       
-* \Description     : Get the Port Base Address                                
+* \Syntax          : void TIMER0A_Handler()      
+* \Description     : Timer0A_Hanler                                 
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : port :  MCU Port                   
+* \Parameters (in) : None                     
 * \Parameters (out): None                                                      
-* \Return value:   : None                                 
+* \Return value:   : None
+*                                                                     
 *******************************************************************************/
-void Dio_GetPortBase(Dio_PortType port)
+void SysTick_Handler()
 {
-    if(port == PORT_A )
-        {  PortBase = GPIO_PORT_A_APB ; }
-    else if(port == PORT_B )
-        {  PortBase = GPIO_PORT_B_APB ; }
-    else if(port == PORT_C )
-        {  PortBase = GPIO_PORT_C_APB ; }
-    else if(port == PORT_D )
-        {  PortBase = GPIO_PORT_D_APB ; } 
-    else if(port == PORT_E )
-        {  PortBase = GPIO_PORT_E_APB ; }  
-    else if(port == PORT_F )
-        {  PortBase = GPIO_PORT_F_APB ; }  
-      
+	  (*p)();
 }
+
+
+
 /**********************************************************************************************************************
  *  GLOBAL FUNCTIONS
  *********************************************************************************************************************/
 
 
 /******************************************************************************
-* \Syntax          : Dio_LevelType Dio_ReadPin (Dio_PinType pin)       
-* \Description     : Read MCU Pin Value                                   
+* \Syntax          : void SysTick_Init(uint32 Ticks)       
+* \Description     : SysTick Initialization                                   
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : pin :  Pin Number                     
+* \Parameters (in) : Ticks : Upper bound Ticks                    
 * \Parameters (out): None                                                      
-* \Return value:   : Dio_LevelType : High/Low
-*                                                                     
+* \Return value:   : None                               
 *******************************************************************************/
-Dio_LevelType Dio_ReadPin (Dio_PortType port , Dio_PinType pin)
-{
-    uint8  pinRead  = 0x0;
- // uint16 maskAddr = 0x0;
-    
-    Dio_GetPortBase(port);
-	  RCGCGPIO |= (1<<port);
-    GPIOLOCK  = UNLOCK_KEY;
-    GPIOCR   |= (1<<pin);
-    GPIODEN  |= (1<<pin);
-    GPIODIR  &= (0<<pin); 
- // maskAddr |= (1<<(pin+2)); 
-
-   return pinRead = (GPIODATA &=(1<<pin));
-    
+void SysTick_Init(uint32 Ticks)
+{  
+	   STRELOAD |= (Ticks & (0x00FFFF) );
+     STCURRENT = 0x0;
+     STCTRL   |= (0x3);
 }
 
+
 /******************************************************************************
-* \Syntax          : void Dio_WritePin (Dio_PinType pin , Dio_LevelType level)      
-* \Description     : Write a level to MCU Pin                                  
+* \Syntax          : SysTick_StopTimer()       
+* \Description     : Clear and Stop SysTick Timer                                  
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : pin :  Pin Number  , level : High/Low                   
+* \Parameters (in) : None                   
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *                                                                     
 *******************************************************************************/
-void Dio_WritePin(Dio_PortType port ,Dio_PinType pin , Dio_LevelType level)
+void SysTick_StopTimer() 
 {
- // uint16 maskAddr = 0x0;
-
-    Dio_GetPortBase(port);
-	  RCGCGPIO |= (1<<port);
-    GPIOLOCK  = UNLOCK_KEY;
-    GPIOCR   |= (1<<pin);
-    GPIODEN  |= (1<<pin);
-    GPIODIR  |= (1<<pin); 
- // maskAddr |= (1<<(pin+2)); 
-    GPIODATA |= (level<<pin);
-
+   STCURRENT = 0x0;
 }
 
+
 /******************************************************************************
-* \Syntax          : Dio_LevelType Dio_Flipchannel (Dio_PinType pin)      
-* \Description     : Flip MCU Pin Value                                   
+* \Syntax          : void SysTick_EnableNotification()        
+* \Description     : Enable Timer Interrupts                                
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : pin :  Pin Number                     
-* \Parameters (out): None                                                      
-* \Return value:   : Dio_LevelType : High/Low
-*                                                                     
-*******************************************************************************/
-Dio_LevelType Dio_Flipchannel (Dio_PortType port ,Dio_PinType pin)
-{
- // uint16 maskAddr = 0x0;
-    uint8 level;
-    Dio_GetPortBase(port);
-	  RCGCGPIO |= (1<<port);
-    GPIOLOCK  = UNLOCK_KEY;
-    GPIOCR   |= (1<<pin);
-    GPIODEN  |= (1<<pin);
-    GPIODIR  |= (1<<pin); 
-  
-    GPIODATA ^= (1<<pin);
-    return level=(GPIODATA &=(1<<pin));
-}
-
-/******************************************************************************
-* \Syntax          : Dio_PortLevelType Dio_ReadPort (Dio_PortType port)      
-* \Description     : Read MCU Port Value                                   
-*                                                                             
-* \Sync\Async      : Synchronous                                               
-* \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : port :  MCU Port                     
-* \Parameters (out): None                                                      
-* \Return value:   : Dio_PortLevelType : Port Value
-*                                                                     
-*******************************************************************************/
-Dio_PortLevelType Dio_ReadPort (Dio_PortType port)
-{
-    uint8  portRead  = 0x0;
-    
-    Dio_GetPortBase(port);
-	  RCGCGPIO |= (1<<port);
-    GPIOLOCK  = UNLOCK_KEY;
-    GPIOCR   |= (0xF);
-    GPIODEN  |= (0xF);
-    GPIODIR  &= (0x0); 
-    
-   return portRead = GPIODATA ;
-}
-
-/******************************************************************************
-* \Syntax          : void Dio_WritePort(Dio_PortType port , Dio_PortLevelType level)     
-* \Description     : Write a vlue to MCU Port                                    
-*                                                                             
-* \Sync\Async      : Synchronous                                               
-* \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : port :  MCU Port                     
+* \Parameters (in) : None                    
 * \Parameters (out): None                                                      
 * \Return value:   : None
 *                                                                     
 *******************************************************************************/
-void Dio_WritePort(Dio_PortType port , Dio_PortLevelType level)
+void SysTick_EnableNotification() 
 {
-    Dio_GetPortBase(port);
-	  RCGCGPIO |= (1<<port);
-    GPIOLOCK  = UNLOCK_KEY;
-    GPIOCR   |= (0xF);
-    GPIODEN  |= (0xF);
-    GPIODIR  |= (0xF); 
-    GPIODATA = level;
-
+    STCTRL |= (1<<1);
 }
+
+
+/******************************************************************************
+* \Syntax          : void SysTick_DisableNotification()        
+* \Description     : Disable Timer Interrupts                               
+*                                                                             
+* \Sync\Async      : Synchronous                                               
+* \Reentrancy      : Non Reentrant                                             
+* \Parameters (in) : None                 
+* \Parameters (out): None                                                      
+* \Return value:   : None
+*                                                                     
+*******************************************************************************/
+void SysTick_DisableNotification() 
+{
+    STCTRL &= (0<<1);
+}
+
 
 /**********************************************************************************************************************
- *  END OF FILE: DIO.c
+ *  END OF FILE: SysTick.c
  *********************************************************************************************************************/
